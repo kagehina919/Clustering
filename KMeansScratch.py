@@ -40,9 +40,29 @@ class KMeans:
             prev_centroids = dict(self.centroids)
 
             for classification in self.classifications:
-                pass
                 self.centroids[classification] = np.average(self.classifications[classification], axis=0)
                 
-    
-    def predict(self, data):
-        pass
+            optimized = True
+
+            for c in self.centroids:
+                original_centroid = prev_centroids[c]
+                current_centroid = self.centroids[c]
+                if np.sum((current_centroid-original_centroid)/original_centroid*100) > self.tol:
+                    optimized = False
+            
+            if optimized:
+                break
+
+clf = KMeans()
+clf.fit(data)
+
+for centroid in clf.centroids:
+    plt.scatter(clf.centroids[centroid][0], clf.centroids[centroid][1],
+                marker = "0", color = "k", size = 150, linewidths = 5)
+
+for classification in clf.classifications:
+    color = colors[classification]
+    for featureset in clf.classifications[classification]:
+        plt.scatter(featureset[0], featureset[1], marker = "x", color = color, s = 150, linewidths = 5)
+
+plt.show()
